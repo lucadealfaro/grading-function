@@ -31,6 +31,7 @@ def grader(request):
         points=points,
         had_errors=had_errors,
     )
+    print("Processed request, nonce: {}, callback_url: {} points: {}".format(nonce, callback_url, points))
     if callback_url:
         r = requests.post(callback_url, json=payload)
         r.raise_for_status()
