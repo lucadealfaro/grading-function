@@ -1,28 +1,8 @@
-# Gcloud configuration
+## Grading Function for NotebookGrader
 
-```
-gcloud config set project notebookgrader
-gcloud auth login
+Author: Luca de Alfaro <luca@ucsc.edu> <luca.de.alfaro@gmail.com>
 
-```
+This is the grading function for [NotebookGrader](https://github.com/lucadealfaro/notebookgrader-app).
 
-Get an auth token:
-```
-gcloud auth print-identity-token
-```
-
-
-
-Authenticate: https://cloud.google.com/functions/docs/securing/authenticating
-
-## To run it locally: 
-
-functions-framework --target=grader
-
-## To kill it: 
-
-lsof -i :8080
-
-## Build the zip:
-
-zip Function.zip main.py requirements.txt
+It is supposed to be run in a stateless server; it is written for [Google 
+Cloud Functions](https://cloud.google.com/functions).
