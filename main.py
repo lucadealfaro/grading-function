@@ -254,10 +254,9 @@ def failimporter(*args, **kwargs):
 
 
 def safeimporter(name, globals=None, locals=None, fromlist=(), level=0):
-    module_names = name.split(".") + (fromlist or [])
-    for n in module_names:
-        if n not in WHITELISTED_MODULES:
-            raise IllegalImport("You cannot import module {}".format(n))
+    module_name = name.split(".")[0]
+    if module_name not in WHITELISTED_MODULES:
+        raise IllegalImport("You cannot import module {}".format(n))
     res = importlib.__import__(name, globals=globals, locals=locals,
                                fromlist=fromlist, level=level)
     return res
@@ -356,6 +355,13 @@ def add_feedback(c, text):
         "execute_result", {"text/html": "<b>{}</b>".format(text)}
     ))
 
+def is_solution(c):
+    return hasattr(c.metadata.notebookgrader,
+                   "is_solution") and c.metadata.notebookgrader.is_solution
+
+def is_tests(c):
+    return hasattr(c.metadata.notebookgrader,
+                   "is_tests") and c.metadata.notebookgrader.is_tests
 
 def run_notebook(nb, timeout=10, max_num_timeouts=1):
     """Runs a notebook, returning a notebook with output cells completed.
@@ -376,12 +382,14 @@ def run_notebook(nb, timeout=10, max_num_timeouts=1):
     points_earned = 0
     num_timeouts = 0
     had_errors = False
+    # We reset all points earned.
+    for c in nb.cells:
+        if c.cell_type == "code" and is_tests(c):
+            c.metadata.notebookgrader.points_earned = 0
     for c in nb.cells:
         if c.cell_type == "code":
             # Prepares the globals, according to whether imports are possible.
-            is_solution = hasattr(c.metadata.notebookgrader,
-                                  "is_solution") and c.metadata.notebookgrader.is_solution
-            importer = failimporter if is_solution else safeimporter
+            importer = failimporter if is_solution(c) else safeimporter
             my_globals["__builtins__"]["__import__"] = importer
             # Runs the cell.
             runner = RunCellWithTimeout(run_cell, collector,
@@ -397,11 +405,12 @@ def run_notebook(nb, timeout=10, max_num_timeouts=1):
                 add_feedback(c, explanation)
                 num_timeouts += 1
                 had_errors = True
-            if c.metadata.notebookgrader.is_tests:
+            if is_tests(c):
                 # Gives points for successfully completed test cells.
                 points = c.metadata.notebookgrader.test_points
                 # print("Cell worth", points, "points") # DEBUG
                 if res is True:
+                    c.metadata.notebookgrader.points_earned = points
                     points_earned += points
                     add_feedback(c,
                                  "Tests passed, you earned {}/{} points".format(
@@ -485,17 +494,22 @@ from collections import defaultdict
 print(random.random())
 """
 
-code8 = """
-import matplotlib
-print(matplotlib.os.path.join("a", "b"))
-"""
-
 code9 = """
 import pandas
 """
 
+code_hidden = """
+def f(x):
+    return x + 1
+    
+assert f(3) == 4
 
-def no_test_exec():
+### BEGIN HIDDEN TESTS
+assert f(4) == 6
+### END HIDDEN TESTS
+"""
+
+def test_exec():
     for code in [code1, code2, code3, code6, code7]:
         collector = OutputCollector()
         my_globals = get_clean_globals()
@@ -506,9 +520,20 @@ def no_test_exec():
         print("---------")
         print(collector.result())
 
+def test_defaultdict():
+    for code in [code7]:
+        collector = OutputCollector()
+        my_globals = get_clean_globals()
+        my_globals["__builtins__"]["print"] = collector
+        clean_code = ast.unparse(cleaner.visit(ast.parse(code)))
+        cr = compile(clean_code, '<string>', 'exec')
+        exec(cr, my_globals)
+        print("---------")
+        print(collector.result())
 
-def no_test_fail():
-    for code in [code4, code5, code8]:
+
+def test_fail():
+    for code in [code4, code5]:
         try:
             collector = OutputCollector()
             my_globals = get_clean_globals()
@@ -524,32 +549,15 @@ def no_test_fail():
         assert result, "Let something incorrect happen."
 
 
-def no_test_one():
-    for code in [code8]:
-        try:
-            collector = OutputCollector()
-            my_globals = get_clean_globals()
-            my_globals["__builtins__"]["print"] = collector
-            my_globals["__builtins__"]["__import__"] = safeimporter
-            clean_code = code
-            cr = compile(clean_code, '<string>', 'exec')
-            exec(cr, my_globals)
-            print(collector.result())
-            print("---------")
-            result = False
-        except Exception as e:
-            print(e)
-            result = True
-        assert result, "Let something incorrect happen."
-
-
-def test_two():
+def test_hidden():
     collector = OutputCollector()
     my_globals = get_clean_globals()
     my_globals["__builtins__"]["print"] = collector
-    clean_code = code8
+    clean_code = code_hidden
     cr = compile(clean_code, '<string>', 'exec')
-    exec(cr, my_globals)
+    try:
+        exec(cr, my_globals)
+    except Exception as e:
+        print("Exception:", traceback.format_exception_only(e)[0])
     print(collector.result())
-    print("---------")
 
