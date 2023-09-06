@@ -1,0 +1,751 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "id": "9dbb65cf",
+      "metadata": {
+        "deletable": false,
+        "editable": false,
+        "id": "9dbb65cf",
+        "nbgrader": {
+          "checksum": "3859d486d36c65e09fdb3203670de5ec",
+          "grade": false,
+          "grade_id": "cell-f9ea4c6266cd052c",
+          "locked": true,
+          "schema_version": 1,
+          "solution": false
+        },
+        "notebookgrader": {
+          "id": "e8b7946d6552061c2320d97b6a218e52283dc5e8",
+          "readonly": true
+        }
+      },
+      "source": [
+        "# CSE 20 Testout Sample\n",
+        "\n",
+        "For each question, there is both a description of the questions, and some tests that help you check that your solution works.\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "788a388c",
+      "metadata": {
+        "id": "788a388c",
+        "notebookgrader": {
+          "id": "d89bae0df25fe07dce868e337aac64092c753852",
+          "readonly": true
+        }
+      },
+      "source": [
+        "## Important:\n",
+        "\n",
+        "* Do not add, delete, or reorder cells.\n",
+        "\n",
+        "* Do not import any module.\n",
+        "\n",
+        "* Any modification you do to test cells will be discarded before grading.\n",
+        "\n",
+        "* Before you turn this problem in, make sure everything runs as expected. First, **restart the kernel** (in the menubar, select Kernel$\\rightarrow$Restart) and then **run all cells** (in the menubar, select Cell$\\rightarrow$Run All).\n",
+        "\n",
+        "* Make sure you fill in any place that says `YOUR CODE HERE`."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "06e3000f",
+      "metadata": {
+        "deletable": false,
+        "editable": false,
+        "id": "06e3000f",
+        "nbgrader": {
+          "checksum": "7e963f322e87f3c05d2c96d550600ea3",
+          "grade": false,
+          "grade_id": "cell-1b397debacf0b1f0",
+          "locked": true,
+          "schema_version": 1,
+          "solution": false
+        },
+        "notebookgrader": {
+          "id": "e82230d58eff073df1cebd2009bb38f483f89256",
+          "readonly": true
+        }
+      },
+      "source": [
+        "## Question 1\n",
+        "\n",
+        "Write a function `swap_pairs` that given a list, swaps adjacent elements, so that the first element (position 0) is swapped with the second (at position 1), the 3rd with the 4th, and so on.  If the list is of odd length, the last element is left alone, as it cannot be swapped with anything.\n",
+        "\n",
+        "Example:\n",
+        "\n",
+        "    swap_pairs(['a', 'b', 'c', 'd', 'e'])\n",
+        "\n",
+        "should give:\n",
+        "\n",
+        "    ['b', 'a', 'd', 'c', 'e']\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "id": "95f0b78c",
+      "metadata": {
+        "deletable": false,
+        "id": "95f0b78c",
+        "nbgrader": {
+          "checksum": "3a66b7f22b7ddda75594a7773f742dfa",
+          "grade": false,
+          "grade_id": "cell-9d983671ab005c31",
+          "locked": false,
+          "schema_version": 1,
+          "solution": true
+        },
+        "notebookgrader": {
+          "id": "503eca6709c8ec6e81d698988d2da4d80d15c9d4",
+          "is_solution": true,
+          "is_tests": false,
+          "readonly": false
+        }
+      },
+      "outputs": [],
+      "source": [
+        "def swap_list(l):\n",
+        "    \"\"\"Swaps elements 2i and 2i+1 in a list, for all i, if such elements exist.\"\"\"\n",
+        "    ### YOUR SOLUTION HERE\n",
+        "    if len(l) == 0:\n",
+        "      return []\n",
+        "    elif len(l) == 1:\n",
+        "      return l\n",
+        "    elif len(l) == 2:\n",
+        "      a = l[0]\n",
+        "      l[0] = l[1]\n",
+        "      l[1] = a\n",
+        "      return l\n",
+        "    if len(l)%2 == 0:\n",
+        "      for i in range(len(l)-(len(l)//2)):\n",
+        "        if(len(l) > 2):\n",
+        "          a = l[2*i]\n",
+        "          l[2*i] = l[2*i+1]\n",
+        "          l[2*i+1] = a\n",
+        "        return l\n",
+        "    elif len(l)%2 != 0:\n",
+        "      b = l[len(l)-1]\n",
+        "      del l[len(l)-1]\n",
+        "      if len(l) > 2:\n",
+        "        for i in range(0, len(l)-(len(l)//2)):\n",
+        "            a = l[2*i]\n",
+        "            l[2*i] = l[2*i+1]\n",
+        "            l[2*i+1] = a\n",
+        "        l.append(b)\n",
+        "        return(l)\n",
+        "    if len(l) == 2:\n",
+        "        a = l[0]\n",
+        "        l[0] = l[1]\n",
+        "        l[1] = a\n",
+        "        l.append(b)\n",
+        "        return(l)\n",
+        "\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 2,
+      "id": "52a86c2a",
+      "metadata": {
+        "deletable": false,
+        "editable": false,
+        "id": "52a86c2a",
+        "nbgrader": {
+          "checksum": "2dfe88e96cd01431028a220d8d0c91db",
+          "grade": true,
+          "grade_id": "cell-2e2fe7596f2b2774",
+          "locked": true,
+          "points": 4,
+          "schema_version": 1,
+          "solution": false
+        },
+        "notebookgrader": {
+          "id": "3aa3b0f50da6fdad3118aaa0921d0165286324b8",
+          "is_solution": false,
+          "is_tests": true,
+          "readonly": true,
+          "test_points": 10
+        }
+      },
+      "outputs": [],
+      "source": [
+        "# Tests 10 points.\n",
+        "\n",
+        "assert swap_list([1, 2]) == [2, 1]\n",
+        "assert swap_list([1]) == [1]\n",
+        "assert swap_list([]) == []\n",
+        "assert swap_list([1, 2, 3]) == [2, 1, 3]\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "f69f812c",
+      "metadata": {
+        "deletable": false,
+        "editable": false,
+        "id": "f69f812c",
+        "nbgrader": {
+          "checksum": "eb31ca81b8f9da6fbca7bccc37f2d6b9",
+          "grade": false,
+          "grade_id": "cell-d62007cce3a56a07",
+          "locked": true,
+          "schema_version": 1,
+          "solution": false
+        },
+        "notebookgrader": {
+          "id": "45894a418dd7f151571ea3b4636d0dc858d0b34e",
+          "readonly": true
+        }
+      },
+      "source": [
+        "## Question 2\n",
+        "\n",
+        "Write a function threeormore that, given an input list, outputs the set of list elements that occur 3 or more times.\n",
+        "\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 3,
+      "id": "c6bf9be0",
+      "metadata": {
+        "deletable": false,
+        "id": "c6bf9be0",
+        "nbgrader": {
+          "checksum": "d0a5e0c635d5a7ed4f0aba3cf81c3dae",
+          "grade": false,
+          "grade_id": "cell-60ac8898a224d9c8",
+          "locked": false,
+          "schema_version": 1,
+          "solution": true
+        },
+        "notebookgrader": {
+          "id": "e9d3950f02b347c09ac8a9f3f3d0b4ef1e978ab9",
+          "is_solution": true,
+          "is_tests": false,
+          "readonly": false
+        }
+      },
+      "outputs": [],
+      "source": [
+        "def threeormore(l):\n",
+        "    ### YOUR SOLUTION HERE\n",
+        "    x = set()\n",
+        "    count = 0\n",
+        "    for i in range(len(l)):\n",
+        "      if(l.count(l[i]) >= 3):\n",
+        "        x.add(l[i])\n",
+        "    return x"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 4,
+      "id": "baed6293",
+      "metadata": {
+        "deletable": false,
+        "editable": false,
+        "id": "baed6293",
+        "nbgrader": {
+          "checksum": "e5e3eb26761e953e6067df428fb61aed",
+          "grade": true,
+          "grade_id": "cell-57eca55510d54862",
+          "locked": true,
+          "points": 10,
+          "schema_version": 1,
+          "solution": false
+        },
+        "notebookgrader": {
+          "id": "56e5a03c463dc6e32632841232061c42d6541e6c",
+          "is_solution": false,
+          "is_tests": true,
+          "readonly": true,
+          "test_points": 10
+        }
+      },
+      "outputs": [],
+      "source": [
+        "# Tests 10 points.\n",
+        "\n",
+        "assert threeormore([1, 3, 5, 4, 3, 7, 6, 3, 7, 7, 7, 1, 2, 0, 3, 1]) == {1, 3, 7}\n",
+        "assert threeormore([]) == set()\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "659b4d39",
+      "metadata": {
+        "deletable": false,
+        "editable": false,
+        "id": "659b4d39",
+        "nbgrader": {
+          "checksum": "84042788a372d07f03f5869d919ecb13",
+          "grade": false,
+          "grade_id": "cell-90d63ed258fcc219",
+          "locked": true,
+          "schema_version": 1,
+          "solution": false
+        },
+        "notebookgrader": {
+          "id": "58585c465161ded86d6a1baa20cdbcf56619f622",
+          "readonly": true
+        }
+      },
+      "source": [
+        "## Question 3\n",
+        "\n",
+        "Implement a function olympic_average that, given a list of numbers, if the list is of length at least 3, excludes the minimum and maximum elements and returns the average of the other elements. If the list is shorter than 3, it just returns the average of the elements. If the list is empty, it returns None. Your function should NOT modify the input list."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 5,
+      "id": "8d05ade5",
+      "metadata": {
+        "deletable": false,
+        "id": "8d05ade5",
+        "nbgrader": {
+          "checksum": "4bf818dfa59f5610282ad556618caf09",
+          "grade": false,
+          "grade_id": "cell-f3731568c71eecc8",
+          "locked": false,
+          "schema_version": 1,
+          "solution": true
+        },
+        "notebookgrader": {
+          "id": "4465b9fbe0f264f40c3f4f29b62e0b5f7a07741c",
+          "is_solution": true,
+          "is_tests": false,
+          "readonly": false
+        }
+      },
+      "outputs": [],
+      "source": [
+        "def olympic_average(els):\n",
+        "  sum = 0\n",
+        "  if (len(els) == 0):\n",
+        "    return None\n",
+        "  elif(len(els) < 3):\n",
+        "    for i in range(len(els)):\n",
+        "      sum += els[i]\n",
+        "    return (sum/len(els))\n",
+        "  elif(len(els) >= 3):\n",
+        "    els.sort()\n",
+        "    for i in range(1,len(els)-1,1):\n",
+        "      sum += els[i]\n",
+        "    return (sum /(len(els)-2))\n",
+        "    ### YOUR SOLUTION HERE"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 6,
+      "id": "9cc9e143",
+      "metadata": {
+        "deletable": false,
+        "editable": false,
+        "id": "9cc9e143",
+        "nbgrader": {
+          "checksum": "0e9c2ab912e38af27fc11974edc71229",
+          "grade": true,
+          "grade_id": "cell-8145a59482427824",
+          "locked": true,
+          "points": 5,
+          "schema_version": 1,
+          "solution": false
+        },
+        "notebookgrader": {
+          "id": "4656956f40d93d4056a97381f79f99f0358d3aaf",
+          "is_solution": false,
+          "is_tests": true,
+          "readonly": true,
+          "test_points": 10
+        }
+      },
+      "outputs": [],
+      "source": [
+        "# Tests 10 points.\n",
+        "\n",
+        "assert olympic_average([5, 3, 4, 5]) == 4.5\n",
+        "assert olympic_average([5, 6, 3, 4, 10]) == 5\n",
+        "assert olympic_average([2, 3]) == 2.5\n",
+        "assert olympic_average([4]) == 4\n",
+        "assert olympic_average([]) == None\n",
+        "assert olympic_average([5, 3, 11, 5]) == 5\n",
+        "\n",
+        "# Did I say that you should never modify the input without warning?\n",
+        "l = [1, 2, 3, 4, 8]\n",
+        "assert olympic_average(l) == 3\n",
+        "assert l == [1, 2, 3, 4, 8]\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "95b3e420",
+      "metadata": {
+        "deletable": false,
+        "editable": false,
+        "id": "95b3e420",
+        "nbgrader": {
+          "checksum": "7e6dc0d42b4cfc909bd916c2b6853772",
+          "grade": false,
+          "grade_id": "cell-378d0a4da50d86da",
+          "locked": true,
+          "schema_version": 1,
+          "solution": false
+        },
+        "notebookgrader": {
+          "id": "f5787a7eeeb126fb75c50ada4ec7b3d6e6a5a122",
+          "readonly": true
+        }
+      },
+      "source": [
+        "## Question 4: A Class to Merge Dictionaries\n",
+        "\n",
+        "We want to create a class `DictionaryMerger` that stores multiple dictionaries.  Consider two dictionaries:\n",
+        "\n",
+        "    d1 = {\"a\": 3, \"b\": 4, \"d\": 7}\n",
+        "    d2 = {\"b\": 5, \"c\": 6, \"d\": 7}\n",
+        "\n",
+        "We can create a dictionary merger `m` and put `d1`, `d2` into the class as follows:\n",
+        "\n",
+        "    m = DictionaryMerger()\n",
+        "\n",
+        "    m.add(d1)\n",
+        "    m.add(d2)\n",
+        "\n",
+        "Once `d1` and `d2` are added to `m`, we should be able to get various output, as follows.\n",
+        "\n",
+        "### `merge`\n",
+        "\n",
+        "The method `merge` should return a dictionary that associates each key, to the _set_ of values that the key is associated in the various dictionaries.\n",
+        "For example,\n",
+        "\n",
+        "    m.merge()\n",
+        "\n",
+        "should return\n",
+        "\n",
+        "    {\"a\": {3}, \"b\": {4, 5}, \"c\": {6}, \"d\": {7}}\n",
+        "\n",
+        "### `frequency`\n",
+        "\n",
+        "The method `frequency(k)` returns the number of original dictionaries that contained the key `k`.\n",
+        "\n",
+        "    m.frequency(\"d\")\n",
+        "\n",
+        "should return 2.\n",
+        "\n",
+        "### `together`\n",
+        "\n",
+        "Finally, the method `together` returns if the keys cited occur together in some dictionary.  Note that the method takes a variable number of arguments.\n",
+        "For instance, if we do:\n",
+        "\n",
+        "    m = DictionaryMerger()\n",
+        "\n",
+        "    m.add({\"a\": 3, \"b\": 4, \"d\": 7})\n",
+        "    m.add({\"b\": 5, \"c\": 6, \"d\": 7})\n",
+        "    m.add({\"e\": 4, \"c\": 5})\n",
+        "\n",
+        "(note that we can add to a `DictionaryMerger` any number of dictionaries!)\n",
+        "then we can ask:\n",
+        "\n",
+        "    m.together(\"a\", \"b\", \"c\")\n",
+        "\n",
+        "which would return `False` (there is no dictionary in which `\"a\"`, `\"b\"`, `\"c\"` all occur), or\n",
+        "\n",
+        "    m.together(\"a\", \"b\")\n",
+        "\n",
+        "which would return `True`."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 7,
+      "id": "aa37251f",
+      "metadata": {
+        "id": "aa37251f",
+        "notebookgrader": {
+          "id": "eda60f66bd1881e42047c6fb433f3c696b0b0f90",
+          "is_solution": true,
+          "is_tests": false,
+          "readonly": false
+        }
+      },
+      "outputs": [],
+      "source": [
+        "class DictionaryMerger(object):\n",
+        "\n",
+        "    def __init__(self):\n",
+        "        \"\"\"Here you can put any initialization you wish for your class.\"\"\"\n",
+        "        self.myDictList = []\n",
+        "        ### YOUR SOLUTION HERE\n",
+        "\n",
+        "    def add(self, d):\n",
+        "        \"\"\"Adds the dictionary d to the dictionaries under consideration.\"\"\"\n",
+        "        self.myDictList.append(d)\n",
+        "        ### YOUR SOLUTION HERE\n",
+        "\n",
+        "    def merge(self):\n",
+        "        \"\"\"Returns a merged dictionary.\"\"\"\n",
+        "        mergedDict = {}\n",
+        "        super_dict = {}\n",
+        "        for d in self.myDictList:\n",
+        "          for k, v in d.items():\n",
+        "            if super_dict.get(k) is None:\n",
+        "              super_dict[k] = []\n",
+        "            if v not in super_dict.get(k):\n",
+        "              super_dict[k].append(v)\n",
+        "        super_dict = {k:set(v) for k, v in super_dict.items()}\n",
+        "        return super_dict\n",
+        "\n",
+        "\n",
+        "        ### YOUR SOLUTION HERE\n",
+        "\n",
+        "    def frequency(self, k):\n",
+        "        \"\"\"Returns a dictionary mapping each key to the number of dictionaries\n",
+        "        in which it occurs.\"\"\"\n",
+        "        count = 0\n",
+        "        for d in self.myDictList:\n",
+        "          for key in d.keys():\n",
+        "            if(key == k):\n",
+        "              count+=1\n",
+        "        return count\n",
+        "        ### YOUR SOLUTION HERE\n",
+        "\n",
+        "    def together(self, *key_list):\n",
+        "        \"\"\"Returns whether there is a single dictionary containing all the\n",
+        "        keys in key_list\"\"\"\n",
+        "        isInKeyList = False\n",
+        "        isNotInKeyList = False\n",
+        "        for i in range(len(self.myDictList)):\n",
+        "          if all(key in self.myDictList[i] for key in key_list):\n",
+        "            isInKeyList = True\n",
+        "          elif all(key in self.myDictList for key in key_list) == False:\n",
+        "            isNotInKeyList = True\n",
+        "        if isInKeyList == True and isNotInKeyList == False:\n",
+        "          return True\n",
+        "        elif isInKeyList == True and isNotInKeyList == True:\n",
+        "          return True\n",
+        "        else:\n",
+        "          return False\n",
+        "        ### YOUR SOLUTION HERE"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 8,
+      "id": "fcd7bc50",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "fcd7bc50",
+        "notebookgrader": {
+          "id": "da0c1b3295c72d2898dd14ee75407725f399d801",
+          "is_solution": false,
+          "is_tests": true,
+          "readonly": true,
+          "test_points": 10
+        },
+        "outputId": "add5eba7-29bc-46d6-b771-314b12683eac"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "All tests pass!\n"
+          ]
+        }
+      ],
+      "source": [
+        "# Tests 10 points. Tests for merge.\n",
+        "\n",
+        "def assert_eq(x, y):\n",
+        "    assert x == y, \"{} != {}\".format(x, y)\n",
+        "\n",
+        "d1 = {\"a\": 3, \"b\": 4, \"d\": 7}\n",
+        "d2 = {\"b\": 5, \"c\": 6, \"d\": 7}\n",
+        "m = DictionaryMerger()\n",
+        "\n",
+        "# Base case first.\n",
+        "assert_eq(m.merge(), {})\n",
+        "\n",
+        "m.add(d1)\n",
+        "\n",
+        "assert_eq(m.merge(), {\"a\": {3}, \"b\": {4}, \"d\": {7}})\n",
+        "m.add(d2)\n",
+        "assert_eq(m.merge(), {'a': {3}, 'b': {4, 5}, 'd': {7}, 'c': {6}})\n",
+        "# If I add d1 again, nothing changes.\n",
+        "m.add(d1)\n",
+        "assert_eq(m.merge(), {'a': {3}, 'b': {4, 5}, 'd': {7}, 'c': {6}})\n",
+        "\n",
+        "m.add({\"a\": 7, \"c\": 8, \"d\": 9})\n",
+        "assert_eq(m.merge(), {'a': {3, 7}, 'b': {4, 5}, 'd': {7, 9}, 'c': {6, 8}})\n",
+        "\n",
+        "# Check that the dictionaries are not changed.\n",
+        "assert_eq(d1, {\"a\": 3, \"b\": 4, \"d\": 7})\n",
+        "assert_eq(d2, {\"b\": 5, \"c\": 6, \"d\": 7})\n",
+        "\n",
+        "print(\"All tests pass!\")"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 9,
+      "id": "65afe251",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "65afe251",
+        "notebookgrader": {
+          "id": "438f154fd9e70f20b0500fff17f6d9d045f43cb8",
+          "is_solution": false,
+          "is_tests": true,
+          "readonly": true,
+          "test_points": 10
+        },
+        "outputId": "719c420c-96fe-4ee4-f282-3822e78404c7"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "All tests pass!\n"
+          ]
+        }
+      ],
+      "source": [
+        "# Tests 10 points. Tests for frequency.\n",
+        "\n",
+        "def assert_eq(x, y):\n",
+        "    assert x == y, \"{} != {}\".format(x, y)\n",
+        "\n",
+        "d1 = {\"a\": 3, \"b\": 4, \"d\": 7}\n",
+        "d2 = {\"b\": 5, \"c\": 6, \"d\": 7}\n",
+        "m = DictionaryMerger()\n",
+        "\n",
+        "# Base case first.\n",
+        "assert_eq(m.frequency(\"a\"), 0)\n",
+        "\n",
+        "m.add(d1)\n",
+        "assert_eq(m.frequency(\"b\"), 1)\n",
+        "\n",
+        "# If I add d1 again, it counts!\n",
+        "m.add(d1)\n",
+        "assert_eq(m.frequency(\"b\"), 2)\n",
+        "\n",
+        "# Now let's add d2.\n",
+        "m.add(d2)\n",
+        "assert_eq(m.frequency(\"d\"), 3)\n",
+        "\n",
+        "# And the input is unchanged.\n",
+        "assert_eq(d1, {\"a\": 3, \"b\": 4, \"d\": 7})\n",
+        "assert_eq(d2, {\"b\": 5, \"c\": 6, \"d\": 7})\n",
+        "\n",
+        "# We can also add one more.\n",
+        "m.add({\"a\": 2, \"b\":4, \"f\":6})\n",
+        "assert_eq(m.frequency(\"b\"), 4)\n",
+        "assert_eq(m.frequency(\"c\"), 1)\n",
+        "\n",
+        "print(\"All tests pass!\")"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 10,
+      "id": "5e01dd43",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "5e01dd43",
+        "notebookgrader": {
+          "id": "5f4084892ca3bec728430b6f10aa4b6c3d458f35",
+          "is_solution": false,
+          "is_tests": true,
+          "readonly": true,
+          "test_points": 10
+        },
+        "outputId": "525bf955-f754-47e9-84dc-77be57fbee59"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "All tests pass!\n"
+          ]
+        }
+      ],
+      "source": [
+        "# Tests 10 points. Tests for together.\n",
+        "\n",
+        "def assert_eq(x, y):\n",
+        "    assert x == y, \"{} != {}\".format(x, y)\n",
+        "\n",
+        "d1 = {\"a\": 3, \"b\": 4, \"d\": 7}\n",
+        "d2 = {\"b\": 5, \"c\": 6, \"d\": 7}\n",
+        "m = DictionaryMerger()\n",
+        "\n",
+        "# Base case first.\n",
+        "assert_eq(m.together(\"a\", \"b\"), False)\n",
+        "assert_eq(m.together(\"a\", \"a\"), False)\n",
+        "\n",
+        "# We can then add d1.\n",
+        "m.add(d1)\n",
+        "assert_eq(m.together(\"a\", \"b\"), True)\n",
+        "assert_eq(m.together(\"a\", \"b\", \"c\"), False)\n",
+        "assert_eq(m.together(\"a\", \"a\"), True)\n",
+        "assert_eq(m.together(\"c\", \"d\"), False)\n",
+        "\n",
+        "# And we can add d2.\n",
+        "m.add(d2)\n",
+        "assert_eq(m.together(\"a\", \"b\"), True)\n",
+        "assert_eq(m.together(\"a\", \"b\", \"c\"), False)\n",
+        "assert_eq(m.together(\"a\", \"a\"), True)\n",
+        "assert_eq(m.together(\"c\", \"d\"), True)\n",
+        "\n",
+        "m.add({\"a\": 3, \"b\": 4, \"d\": 7, \"e\": 8})\n",
+        "assert_eq(m.together(\"a\", \"b\", \"e\"), True)\n",
+        "assert_eq(m.together(), True)\n",
+        "\n",
+        "# And the input is unchanged.\n",
+        "assert_eq(d1, {\"a\": 3, \"b\": 4, \"d\": 7})\n",
+        "assert_eq(d2, {\"b\": 5, \"c\": 6, \"d\": 7})\n",
+        "\n",
+        "print(\"All tests pass!\")"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "XzWKgxWfqYDs"
+      },
+      "id": "XzWKgxWfqYDs",
+      "execution_count": 10,
+      "outputs": []
+    }
+  ],
+  "metadata": {
+    "colab": {
+      "provenance": []
+    },
+    "language_info": {
+      "name": "python"
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
