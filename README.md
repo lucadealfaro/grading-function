@@ -6,3 +6,7 @@ This is the grading function for [NotebookGrader](https://github.com/lucadealfar
 
 It is supposed to be run in a stateless server; it is written for [Google 
 Cloud Functions](https://cloud.google.com/functions).
+
+You can run it locally for testing via: 
+
+    functions-framework --target=grader

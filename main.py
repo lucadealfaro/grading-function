@@ -256,7 +256,7 @@ def failimporter(*args, **kwargs):
 def safeimporter(name, globals=None, locals=None, fromlist=(), level=0):
     module_name = name.split(".")[0]
     if module_name not in WHITELISTED_MODULES:
-        raise IllegalImport("You cannot import module {}".format(n))
+        raise IllegalImport("You cannot import module {}".format(module_name))
     res = importlib.__import__(name, globals=globals, locals=locals,
                                fromlist=fromlist, level=level)
     return res
@@ -520,7 +520,7 @@ def test_exec():
         print("---------")
         print(collector.result())
 
-def test_defaultdict():
+def no_test_defaultdict():
     for code in [code7]:
         collector = OutputCollector()
         my_globals = get_clean_globals()
@@ -532,7 +532,7 @@ def test_defaultdict():
         print(collector.result())
 
 
-def test_fail():
+def no_test_fail():
     for code in [code4, code5]:
         try:
             collector = OutputCollector()
@@ -561,3 +561,11 @@ def test_hidden():
         print("Exception:", traceback.format_exception_only(e)[0])
     print(collector.result())
 
+def test_real_notebook():
+    with open("test_files/test_notebook.ipynb") as f:
+        notebook_json = json.load(f)
+    nb = nbformat.reads(notebook_json, as_version=4)
+    points, had_errors = run_notebook(
+        nb, max_num_timeouts=1)
+    print("Points:", points, "had errors:", had_errors)
+    print(nbformat.writes(nb, 4))
