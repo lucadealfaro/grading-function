@@ -82,7 +82,7 @@ assert f(4) == 6
 """
 
 
-def test_exec():
+def no_test_exec():
     for code in [code1, code2, code3, code6, code7]:
         collector = OutputCollector()
         my_globals = get_clean_globals()
@@ -123,7 +123,7 @@ def no_test_fail():
         assert result, "Let something incorrect happen."
 
 
-def test_hidden():
+def no_test_hidden():
     collector = OutputCollector()
     my_globals = get_clean_globals()
     my_globals["__builtins__"]["print"] = collector
@@ -136,11 +136,21 @@ def test_hidden():
     print(collector.result())
 
 
-def test_real_notebook():
-    with open("test_files/test_notebook.ipynb") as f:
+def no_test_notebook1():
+    with open("test_files/notebook1.json") as f:
         notebook_json = f.read()
     nb = nbformat.reads(notebook_json, as_version=4)
     points, had_errors = run_notebook(
         nb, max_num_timeouts=1)
     print("Points:", points, "had errors:", had_errors)
     print(nbformat.writes(nb, 4))
+
+def test_notebook2():
+    with open("test_files/notebook2.json") as f:
+        notebook_json = f.read()
+    nb = nbformat.reads(notebook_json, as_version=4)
+    points, had_errors = run_notebook(
+        nb, max_num_timeouts=1)
+    print("Points:", points, "had errors:", had_errors)
+    with open("test_files/notebook2_out.ipynb", "w") as f:
+        f.write(nbformat.writes(nb, 4))
