@@ -336,9 +336,9 @@ def run_cell(c, my_globals, collector):
         # print("Returning False")
         return False
     except Exception as e:
-        err = traceback.format_exception_only(e)[0]
+        err_list = traceback.format_exception(e, limit=-1)
         add_output(c, collector.result())
-        add_output(c, err)
+        add_output(c, "".join(err_list))
         # print("Returning False")
         return False
 
