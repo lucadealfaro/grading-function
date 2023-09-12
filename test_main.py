@@ -66,6 +66,12 @@ from collections import defaultdict
 print(random.random())
 """
 
+code8 = """
+import random
+from collections import defaultdict
+print("Hello")
+"""
+
 code9 = """
 import pandas
 """
@@ -82,24 +88,24 @@ assert f(4) == 6
 """
 
 
-def no_test_exec():
+def test_exec():
     for code in [code1, code2, code3, code6, code7]:
         collector = OutputCollector()
         my_globals = get_clean_globals()
         my_globals["__builtins__"]["print"] = collector
-        clean_code = ast.unparse(cleaner.visit(ast.parse(code)))
+        clean_code = ast.unparse(cleaner_leave_imports.visit(ast.parse(code)))
         cr = compile(clean_code, '<string>', 'exec')
         exec(cr, my_globals)
         print("---------")
         print(collector.result())
 
 
-def no_test_defaultdict():
+def test_defaultdict():
     for code in [code7]:
         collector = OutputCollector()
         my_globals = get_clean_globals()
         my_globals["__builtins__"]["print"] = collector
-        clean_code = ast.unparse(cleaner.visit(ast.parse(code)))
+        clean_code = ast.unparse(cleaner_leave_imports.visit(ast.parse(code)))
         cr = compile(clean_code, '<string>', 'exec')
         exec(cr, my_globals)
         print("---------")
@@ -112,7 +118,7 @@ def no_test_fail():
             collector = OutputCollector()
             my_globals = get_clean_globals()
             my_globals["__builtins__"]["print"] = collector
-            clean_code = ast.unparse(cleaner.visit(ast.parse(code)))
+            clean_code = ast.unparse(cleaner_leave_imports.visit(ast.parse(code)))
             cr = compile(clean_code, '<string>', 'exec')
             exec(cr, my_globals)
             print(collector.result())
@@ -145,7 +151,7 @@ def no_test_notebook1():
     print("Points:", points, "had errors:", had_errors)
     print(nbformat.writes(nb, 4))
 
-def test_notebook2():
+def no_test_notebook2():
     with open("test_files/notebook2.json") as f:
         notebook_json = f.read()
     nb = nbformat.reads(notebook_json, as_version=4)
@@ -154,3 +160,15 @@ def test_notebook2():
     print("Points:", points, "had errors:", had_errors)
     with open("test_files/notebook2_out.ipynb", "w") as f:
         f.write(nbformat.writes(nb, 4))
+
+def test_remove_imports():
+    code = code8
+    collector = OutputCollector()
+    my_globals = get_clean_globals()
+    my_globals["__builtins__"]["print"] = collector
+    clean_code = ast.unparse(cleaner_remove_imports.visit(ast.parse(code)))
+    print(clean_code)
+    cr = compile(clean_code, '<string>', 'exec')
+    exec(cr, my_globals)
+    print("---------")
+    print(collector.result())

@@ -246,7 +246,17 @@ class CleanCode(ast.NodeTransformer):
         return node
 
 
-cleaner = CleanCode()
+cleaner_leave_imports = CleanCode()
+
+class CleanCodeAndRemoveImports(ast.NodeTransformer):
+
+    def visit_Import(self, node):
+        return None
+
+    def visit_ImportFrom(self, node):
+        return None
+
+cleaner_remove_imports = CleanCodeAndRemoveImports()
 
 
 def failimporter(*args, **kwargs):
@@ -324,7 +334,8 @@ def run_cell(c, my_globals, collector):
     c.outputs = []
     try:
         collector.clear()
-        clean_code = ast.unparse(cleaner.visit(ast.parse(c.source)))
+        code_cleaner = cleaner_remove_imports if is_solution(c) else cleaner_leave_imports
+        clean_code = ast.unparse(code_cleaner.visit(ast.parse(c.source)))
         cr = compile(clean_code, '<string>', 'exec')
         exec(cr, my_globals)
         add_output(c, collector.result())
