@@ -172,3 +172,13 @@ def test_remove_imports():
     exec(cr, my_globals)
     print("---------")
     print(collector.result())
+
+def test_problem1():
+    with open("test_files/problem1.ipynb") as f:
+        notebook_json = f.read()
+    nb = nbformat.reads(notebook_json, as_version=4)
+    points, had_errors = run_notebook(
+        nb, max_num_timeouts=1)
+    print("Points:", points, "had errors:", had_errors)
+    with open("test_files/problem1_out.ipynb", "w") as f:
+        f.write(nbformat.writes(nb, 4))
