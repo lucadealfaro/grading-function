@@ -222,7 +222,7 @@ WHITELISTED_MODULES = [
     # Crypto etc
     "hashlib", "hmac", "secrets",
     # Os and the like.
-    # "time",
+    "time",
     # Data handling.
     "json", "base64", "binascii",
 ]
