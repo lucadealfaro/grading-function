@@ -17,7 +17,7 @@ def grader(request):
     # Reads the parameters.
     request_json = request.get_json(silent=True)
     notebook_json = request_json.get("notebook_json")
-    timeout = request_json.get("timeout", 20)
+    timeout = request_json.get("timeout", 60)
     max_num_timeouts = request_json.get("max_num_timeouts", 1)
     nonce = request_json.get("nonce")
     callback_url = request_json.get("callback_url")
@@ -210,6 +210,7 @@ SAFE_BUILTINS = [
 WHITELISTED_MODULES = [
     # special
     "pandas", "numpy", "scipy", "math", "random", "matplotlib", "pytorch",
+    "requests", "PIL",
     # text and binary
     "string", "re", "struct",
     # data types
@@ -224,7 +225,7 @@ WHITELISTED_MODULES = [
     # Os and the like.
     "time",
     # Data handling.
-    "json", "base64", "binascii",
+    "json", "base64", "binascii", "zipfile",
 ]
 
 
@@ -246,17 +247,7 @@ class CleanCode(ast.NodeTransformer):
         return node
 
 
-cleaner_leave_imports = CleanCode()
-
-class CleanCodeAndRemoveImports(ast.NodeTransformer):
-
-    def visit_Import(self, node):
-        return None
-
-    def visit_ImportFrom(self, node):
-        return None
-
-cleaner_remove_imports = CleanCodeAndRemoveImports()
+cleaner = CleanCode()
 
 
 def failimporter(*args, **kwargs):
@@ -334,8 +325,7 @@ def run_cell(c, my_globals, collector):
     c.outputs = []
     try:
         collector.clear()
-        code_cleaner = cleaner_remove_imports if is_solution(c) else cleaner_leave_imports
-        clean_code = ast.unparse(code_cleaner.visit(ast.parse(c.source)))
+        clean_code = ast.unparse(cleaner.visit(ast.parse(c.source)))
         cr = compile(clean_code, '<string>', 'exec')
         exec(cr, my_globals)
         add_output(c, collector.result())
@@ -378,7 +368,7 @@ def is_tests(c):
             and hasattr(c.metadata.notebookgrader, "is_tests")
             and c.metadata.notebookgrader.is_tests)
 
-def run_notebook(nb, timeout=10, max_num_timeouts=1):
+def run_notebook(nb, timeout=60, max_num_timeouts=1):
     """Runs a notebook, returning a notebook with output cells completed.
     Args:
         nb: notebook to be run.
