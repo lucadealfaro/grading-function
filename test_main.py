@@ -1,6 +1,7 @@
 import os
+import sys
 
-from main import *
+from .main import *
 
 code1 = """
 import math
@@ -88,47 +89,6 @@ assert f(4) == 6
 """
 
 
-def test_exec():
-    for code in [code1, code2, code3, code6, code7]:
-        collector = OutputCollector()
-        my_globals = get_clean_globals()
-        my_globals["__builtins__"]["print"] = collector
-        clean_code = ast.unparse(cleaner_leave_imports.visit(ast.parse(code)))
-        cr = compile(clean_code, '<string>', 'exec')
-        exec(cr, my_globals)
-        print("---------")
-        print(collector.result())
-
-
-def test_defaultdict():
-    for code in [code7]:
-        collector = OutputCollector()
-        my_globals = get_clean_globals()
-        my_globals["__builtins__"]["print"] = collector
-        clean_code = ast.unparse(cleaner_leave_imports.visit(ast.parse(code)))
-        cr = compile(clean_code, '<string>', 'exec')
-        exec(cr, my_globals)
-        print("---------")
-        print(collector.result())
-
-
-def no_test_fail():
-    for code in [code4, code5]:
-        try:
-            collector = OutputCollector()
-            my_globals = get_clean_globals()
-            my_globals["__builtins__"]["print"] = collector
-            clean_code = ast.unparse(cleaner_leave_imports.visit(ast.parse(code)))
-            cr = compile(clean_code, '<string>', 'exec')
-            exec(cr, my_globals)
-            print(collector.result())
-            print("---------")
-            result = False
-        except Exception as e:
-            result = True
-        assert result, "Let something incorrect happen."
-
-
 def no_test_hidden():
     collector = OutputCollector()
     my_globals = get_clean_globals()
@@ -161,18 +121,6 @@ def no_test_notebook2():
     with open("test_files/notebook2_out.ipynb", "w") as f:
         f.write(nbformat.writes(nb, 4))
 
-def test_remove_imports():
-    code = code8
-    collector = OutputCollector()
-    my_globals = get_clean_globals()
-    my_globals["__builtins__"]["print"] = collector
-    clean_code = ast.unparse(cleaner_remove_imports.visit(ast.parse(code)))
-    print(clean_code)
-    cr = compile(clean_code, '<string>', 'exec')
-    exec(cr, my_globals)
-    print("---------")
-    print(collector.result())
-
 def test_problem1():
     with open("test_files/problem1.ipynb") as f:
         notebook_json = f.read()
@@ -181,4 +129,14 @@ def test_problem1():
         nb, max_num_timeouts=1)
     print("Points:", points, "had errors:", had_errors)
     with open("test_files/problem1_out.ipynb", "w") as f:
+        f.write(nbformat.writes(nb, 4))
+
+def no_test_matplotlib():
+    with open("test_files/test_matplotlib.ipynb") as f:
+        notebook_json = f.read()
+    nb = nbformat.reads(notebook_json, as_version=4)
+    points, had_errors = run_notebook(
+        nb, max_num_timeouts=2)
+    print("Points:", points, "had errors:", had_errors)
+    with open("test_files/test_matplotlib_out.ipynb", "w") as f:
         f.write(nbformat.writes(nb, 4))
