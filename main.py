@@ -210,7 +210,8 @@ SAFE_BUILTINS = [
 WHITELISTED_MODULES = [
     # special
     "pandas", "numpy", "scipy", "math", "random", "matplotlib", "pytorch",
-    "requests", "PIL",
+    "requests", "PIL", "sklearn", "networkx", "openai", "langchain",
+    "dotenv",
     # text and binary
     "string", "re", "struct",
     # data types
@@ -223,7 +224,7 @@ WHITELISTED_MODULES = [
     # Crypto etc
     "hashlib", "hmac", "secrets",
     # Os and the like.
-    "time", "io", "os", "pathlib",
+    "time", "io",
     # Data handling.
     "json", "base64", "binascii", "zipfile",
 ]
